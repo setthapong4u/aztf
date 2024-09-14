@@ -52,10 +52,8 @@ pipeline {
     
     post {
         always {
-            node {
-                // Clean workspace after completion
-                cleanWs()
-            }
+            // Clean workspace after completion
+            cleanWs()
         }
     }
 }
