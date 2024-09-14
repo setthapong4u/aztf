@@ -1,13 +1,6 @@
 pipeline {
     agent any
     
-    environment {
-        ARM_CLIENT_ID = credentials('azure-sp-client-id')
-        ARM_CLIENT_SECRET = credentials('azure-sp-client-secret')
-        ARM_SUBSCRIPTION_ID = credentials('azure-subscription-id')
-        ARM_TENANT_ID = credentials('azure-tenant-id')
-    }
-    
     stages {
         stage('Checkout') {
             steps {
@@ -50,4 +43,10 @@ pipeline {
         }
     }
     
+    post {
+        always {
+            // Clean workspace after completion
+            cleanWs()
+        }
+    }
 }
