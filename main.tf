@@ -10,32 +10,32 @@ resource "random_string" "password" {
 }
 
 # Resource Group where all resources will be created
-resource "azurerm_resource_group" "example" {
-  name     = "example-resources"
+resource "azurerm_resource_group" "demo" {
+  name     = "demo-resources"
   location = var.location
 }
 
 # Virtual Network (VNet) that will contain the subnet for the VM
 resource "azurerm_virtual_network" "vnet" {
-  name                = "example-vnet"
+  name                = "demo-vnet"
   address_space       = ["10.0.0.0/16"]
   location            = var.location
-  resource_group_name = azurerm_resource_group.example.name
+  resource_group_name = azurerm_resource_group.demo.name
 }
 
 # Subnet inside the VNet
 resource "azurerm_subnet" "subnet" {
-  name                 = "example-subnet"
-  resource_group_name  = azurerm_resource_group.example.name
+  name                 = "demo-subnet"
+  resource_group_name  = azurerm_resource_group.demo.name
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = ["10.0.1.0/24"]
 }
 
 # Network Security Group (NSG)
 resource "azurerm_network_security_group" "nsg" {
-  name                = "example-nsg"
+  name                = "demo-nsg"
   location            = var.location
-  resource_group_name = azurerm_resource_group.example.name
+  resource_group_name = azurerm_resource_group.demo.name
 
   security_rule {
     name                       = "allow_ssh"
@@ -64,9 +64,9 @@ resource "azurerm_network_security_group" "nsg" {
 
 # Network Interface to connect the VM to the network
 resource "azurerm_network_interface" "ni_linux" {
-  name                = "example-nic-linux"
+  name                = "demo-nic-linux"
   location            = var.location
-  resource_group_name = azurerm_resource_group.example.name
+  resource_group_name = azurerm_resource_group.demo.name
 
   ip_configuration {
     name                          = "internal"
@@ -83,12 +83,12 @@ resource "azurerm_network_interface_security_group_association" "ni_nsg_associat
 
 # Linux Virtual Machine configuration
 resource "azurerm_linux_virtual_machine" "linux_machine" {
-  name                            = "terragoat-linux"
+  name                            = "demo-linux"
   location                        = var.location
-  resource_group_name             = azurerm_resource_group.example.name
+  resource_group_name             = azurerm_resource_group.demo.name
   network_interface_ids           = [azurerm_network_interface.ni_linux.id]
   size                            = "Standard_F2"
-  admin_username                  = "terragoat-linux"
+  admin_username                  = "demo-linux"
   admin_password                  = random_string.password.result
   disable_password_authentication = false
 
