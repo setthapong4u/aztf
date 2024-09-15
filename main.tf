@@ -1,6 +1,3 @@
-# main.tf
-
-# Generate a random string to use as a password for the VM
 resource "random_string" "password" {
   length      = 16
   special     = false
@@ -23,7 +20,7 @@ resource "azurerm_virtual_network" "vnet" {
   resource_group_name = azurerm_resource_group.demo.name
 }
 
-# Subnet inside the VNet
+# Subnet 
 resource "azurerm_subnet" "subnet" {
   name                 = "demo-subnet"
   resource_group_name  = azurerm_resource_group.demo.name
@@ -62,7 +59,7 @@ resource "azurerm_network_security_group" "nsg" {
   }
 }
 
-# Network Interface to connect the VM to the network
+# NI to connect the VM 
 resource "azurerm_network_interface" "ni_linux" {
   name                = "demo-nic-linux"
   location            = var.location
@@ -75,7 +72,7 @@ resource "azurerm_network_interface" "ni_linux" {
   }
 }
 
-# Associate the Network Interface with the Network Security Group
+# Associate the NI with the NSG
 resource "azurerm_network_interface_security_group_association" "ni_nsg_association" {
   network_interface_id      = azurerm_network_interface.ni_linux.id
   network_security_group_id = azurerm_network_security_group.nsg.id
@@ -106,7 +103,7 @@ resource "azurerm_linux_virtual_machine" "linux_machine" {
   }
 
   tags = {
-    terragoat   = true
+    
     environment = var.environment
   }
 }
