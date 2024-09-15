@@ -1,5 +1,10 @@
 pipeline {
+
     agent any
+
+    parameters {
+        booleanParam(name: 'DESTROY_ENV', defaultValue: false, description: 'Set to true to enable destruction')
+    }
     
     environment {
         ARM_CLIENT_ID = credentials('azure-sp-client-id')
@@ -34,6 +39,19 @@ pipeline {
             steps {
                 // Apply the Terraform changes
                 sh 'terraform apply -auto-approve tfplan'
+            }
+        }
+        
+        stage('Confirm Before Destroy') {
+            when {
+                expression {
+                    return params.DESTROY_ENV == true
+                }
+            }
+            steps {
+                script {
+                    input message: 'Are you sure you want to destroy the infrastructure? This action is irreversible.', ok: 'Yes, Destroy'
+                }
             }
         }
         
